@@ -33,6 +33,10 @@ Playwright tự mở Vite ở cổng 4173 và mock API cho các tình huống CM
 - Session dùng cookie HttpOnly. Đặt `COOKIE_SECURE=true` khi phục vụ qua HTTPS; đặt `PUBLIC_URL` thành địa chỉ website để tạo sitemap.
 - `docker compose up -d --build` triển khai ở `http://localhost:3001`, dùng volumes cho data và uploads. Kiểm tra `docker compose ps` và `/api/health` sau triển khai.
 
+## CI/CD và VPS
+
+GitHub Actions build và lưu image tại `ghcr.io/nguy3nantam/kimsonauto01`. Quy trình cấu hình SSH, GitHub Secrets và triển khai production nằm trong [docs/VPS_DEPLOYMENT.md](docs/VPS_DEPLOYMENT.md).
+
 ## Sao lưu và phục hồi
 
 Dừng các tiến trình ứng dụng ghi dữ liệu trước khi sao lưu để database và tài liệu cùng trạng thái. Chạy backup bằng cùng user có quyền đọc data/uploads. Với bản chạy trực tiếp:

@@ -1,0 +1,102 @@
+name: Build container and deploy VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    outputs:
+      image_ref: ${{ steps.image.outputs.ref }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v5
+        id: metadata
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=long
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - id: image
+        run: echo "ref=${REGISTRY}/${IMAGE_NAME}:sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    if: vars.VPS_DEPLOY_ENABLED == 'true'
+    needs: image
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.VPS_PUBLIC_URL }}
+    env:
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_PORT: ${{ secrets.VPS_PORT }}
+      VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+      VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+      VPS_APP_DIR: ${{ vars.VPS_APP_DIR }}
+      IMAGE_REF: ${{ needs.image.outputs.image_ref }}
+      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate deployment settings
+        shell: bash
+        run: |
+          test -n "$VPS_HOST"
+          test -n "$VPS_USER"
+          test -n "$VPS_SSH_KEY"
+          test -n "$VPS_KNOWN_HOSTS"
+      - name: Configure SSH
+        shell: bash
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+      - name: Upload deployment files
+        shell: bash
+        run: |
+          port="${VPS_PORT:-22}"
+          app_dir="${VPS_APP_DIR:-kimsonauto}"
+          ssh -p "$port" "$VPS_USER@$VPS_HOST" "mkdir -p '$app_dir/scripts'"
+          scp -P "$port" compose.production.yml "$VPS_USER@$VPS_HOST:$app_dir/"
+          scp -P "$port" scripts/deploy-vps.sh "$VPS_USER@$VPS_HOST:$app_dir/scripts/"
+      - name: Pull and deploy healthy container
+        shell: bash
+        run: |
+          port="${VPS_PORT:-22}"
+          app_dir="${VPS_APP_DIR:-kimsonauto}"
+          printf '%s' "$GHCR_TOKEN" | ssh -p "$port" "$VPS_USER@$VPS_HOST" +            "docker login ghcr.io -u '${{ github.actor }}' --password-stdin"
+          ssh -p "$port" "$VPS_USER@$VPS_HOST" +            "cd '$app_dir' && chmod +x scripts/deploy-vps.sh && IMAGE_REF='$IMAGE_REF' scripts/deploy-vps.sh"

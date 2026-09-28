@@ -1,0 +1,25 @@
+name: kimsonauto
+
+services:
+  web:
+    image: ${IMAGE_REF:-ghcr.io/nguy3nantam/kimsonauto01:latest}
+    container_name: kimsonauto
+    ports:
+      - "127.0.0.1:${HOST_PORT:-3001}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+    volumes:
+      - data:/app/server/data
+      - uploads:/app/server/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(async r=>process.exit(r.ok&&(await r.json()).status==='ok'?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+
+volumes:
+  data:
+  uploads:
