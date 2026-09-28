@@ -282,13 +282,7 @@ export default function Navbar() {
 
         {/* Drawer Footer */}
         <div className="p-6 border-t border-slate-100 bg-slate-50/70 space-y-3 shrink-0">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-500 font-medium">Ngôn ngữ hiển thị</span>
-            <div className="flex items-center bg-white border border-slate-200 p-0.5 rounded-lg text-xs font-bold text-slate-600">
-            </div>
-          </div>
-
-          <div className="text-[11px] text-slate-400 text-center pt-2 border-t border-slate-200/60">
+          <div className="text-[11px] text-slate-400 text-center">
             © 2026 Kim Sơn Automobiles. All rights reserved.
           </div>
         </div>
@@ -337,12 +331,8 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Phía bên phải: Chuyển đổi ngôn ngữ & Nút mở Offcanvas Menu */}
+          {/* Phía bên phải: Tài khoản & Nút mở Offcanvas Menu */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            {/* Language Switcher */}
-            <div className="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg text-[11px] font-bold text-slate-600">
-            </div>
-
             {/* Dropdown Menu Tài Khoản (Đăng Nhập / Đăng Ký) khi rê chuột (Hover) */}
             <div className="relative group">
               <Link
