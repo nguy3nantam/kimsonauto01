@@ -2,6 +2,7 @@ import { api } from '../../services/api';
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { publicAsset } from '../../services/assets';
 import { 
   Menu, 
   X, 
@@ -156,7 +157,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <Link to="/" onClick={() => setIsOpen(false)}>
               <img 
-                src="/logo-kimson.png" 
+                src={publicAsset('/logo-kimson.png')} 
                 alt="Kim Sơn Automobiles" 
                 className="h-10 w-auto object-contain hover:scale-105 transition-transform"
               />
@@ -313,7 +314,7 @@ export default function Navbar() {
             aria-label="Trang Chủ Kim Sơn Automobiles"
           >
             <img 
-              src="/logo-kimson.png" 
+              src={publicAsset('/logo-kimson.png')} 
               alt="Kim Sơn Automobiles" 
               className="h-8 sm:h-9 w-auto object-contain drop-shadow-xs transition-transform duration-300 group-hover:scale-105"
             />

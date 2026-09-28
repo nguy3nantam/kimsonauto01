@@ -53,7 +53,7 @@ export const ecosystemData = {
         'Trung tâm đồng sơn công nghệ cao với phòng sấy hấp khép kín',
         'Cân chỉnh góc đặt bánh xe 3D và kiểm định an toàn điện tử'
       ],
-      image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=85&w=1200'
+      image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=85&w=1200'
     },
     {
       id: 'parts',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { publicAsset } from '../services/assets';
 import { 
   ChevronRight, 
   ArrowRight, 
@@ -37,7 +38,7 @@ const DEFAULT_SLIDES = [
     title: 'Đại Lý Ủy Quyền VinFast\nHàng Đầu Khu Vực Phía Nam',
     subtitle: 'MẠNG LƯỚI SHOWROOM & XƯỞNG DỊCH VỤ HIỆN ĐẠI',
     description: 'Sở hữu chuỗi 11 chi nhánh và showroom 3S/1S VinFast tại các vị trí chiến lược: Biên Hòa, Long Thành, Long Khánh, Trảng Dài, Bình Thạnh, Quận 2...',
-    image: '/vinfast-kimson-bienhoa.jpg',
+    image: publicAsset('/vinfast-kimson-bienhoa.jpg'),
     primaryButtonText: 'Khám Phá Mạng Lưới Chi Nhánh',
     primaryButtonLink: '/mang-luoi',
     secondaryButtonText: 'Đăng Ký Lái Thử & Tư Vấn',
@@ -48,7 +49,7 @@ const DEFAULT_SLIDES = [
     title: 'Trung Tâm Kỹ Thuật Ô Tô &\nCứu Hộ Giao Thông 24/7',
     subtitle: 'NĂNG LỰC DỊCH VỤ VÀ KỸ THUẬT TIÊN TIẾN',
     description: 'Đội ngũ kỹ sư tay nghề cao, trang thiết bị chẩn đoán chuyên hãng hiện đại, cung ứng phụ tùng chính hãng và mạng lưới xe cứu hộ chuyên dụng túc trực 24/7.',
-    image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=85&w=1920',
+    image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=85&w=1920',
     primaryButtonText: 'Tìm Hiểu Mạng Lưới Chi Nhánh',
     primaryButtonLink: '/mang-luoi',
     secondaryButtonText: 'Hotline Cứu Hộ 24/7',
@@ -179,7 +180,7 @@ export default function HomePage() {
             <div className="relative group">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-slate-200">
                 <img 
-                  src="/vinfast-kimson-bienhoa.jpg" 
+                  src={publicAsset('/vinfast-kimson-bienhoa.jpg')} 
                   alt="VinFast Kim Sơn Biên Hoà" 
                   loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"

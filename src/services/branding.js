@@ -1,17 +1,27 @@
 import { useState, useEffect } from 'react';
 import { api } from './api';
+import { publicAsset } from './assets';
 
 export const DEFAULT_BRANDING = {
-  logo: '/logo-kimson.png',
-  logoWhite: '/logo-kimson-white.png',
-  favicon: '/favicon.png',
+  logo: publicAsset('/logo-kimson.png'),
+  logoWhite: publicAsset('/logo-kimson-white.png'),
+  favicon: publicAsset('/favicon.png'),
   siteTitle: 'Kim Sơn Automobiles - Cổng Thông Tin Hệ Sinh Thái Ô Tô'
 };
 
 export function getStoredBranding() {
   try {
     const raw = localStorage.getItem('kimson_branding');
-    if (raw) return { ...DEFAULT_BRANDING, ...JSON.parse(raw) };
+    if (raw) {
+      const stored = JSON.parse(raw);
+      return {
+        ...DEFAULT_BRANDING,
+        ...stored,
+        logo: publicAsset(stored.logo),
+        logoWhite: publicAsset(stored.logoWhite),
+        favicon: publicAsset(stored.favicon),
+      };
+    }
   } catch (e) {
     console.warn('Error reading stored branding:', e);
   }

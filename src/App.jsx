@@ -1,5 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, useLocation, Navigate, Outlet } from 'react-router-dom';
 
 // Layout & Common Components
 import Navbar from './components/common/Navbar';
@@ -14,6 +14,8 @@ const SustainabilityPage = lazy(() => import('./pages/SustainabilityPage'));
 const NewsPage = lazy(() => import('./pages/NewsPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const staticPreview = import.meta.env.VITE_STATIC_PREVIEW === 'true';
+const Router = staticPreview ? HashRouter : BrowserRouter;
 
 // Admin Backend Portal Components & Pages
 const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'));
@@ -92,7 +94,7 @@ function PublicLayout() {
 
 export default function App() {
   return (
-    <Router basename={import.meta.env.BASE_URL}>
+    <Router basename={staticPreview ? undefined : import.meta.env.BASE_URL}>
       <ScrollToTop />
       <Suspense fallback={<div className="p-12 text-center" role="status">Đang tải...</div>}>
       <Routes>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { publicAsset } from '../services/assets';
 import { 
   Award, ShieldCheck, Users, Target, Clock, Wrench, CheckCircle2, 
   MapPin, Phone, Sparkles, ChevronRight, Zap, ExternalLink 
@@ -54,7 +55,7 @@ export default function AboutPage() {
             {/* Image Box */}
             <div className="lg:col-span-7 relative group overflow-hidden min-h-[340px] sm:min-h-[440px] flex items-center bg-black">
               <img 
-                src="/vinfast-kimson-bienhoa.jpg" 
+                src={publicAsset('/vinfast-kimson-bienhoa.jpg')} 
                 alt="Showroom VinFast Kim Sơn Biên Hoà" 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -147,7 +148,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="relative rounded-3xl overflow-hidden shadow-2xl group">
             <img 
-              src="https://images.unsplash.com/photo-1562141961-b5d7d7665637?auto=format&fit=crop&q=80&w=900" 
+              src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?auto=format&fit=crop&q=80&w=900" 
               alt="Xưởng Kỹ Thuật Kim Sơn" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />

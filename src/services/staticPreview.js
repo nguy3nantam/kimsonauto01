@@ -4,18 +4,14 @@ import branches from '../../server/data/branches.json';
 import esg from '../../server/data/esg.json';
 import news from '../../server/data/news.json';
 import sliders from '../../server/data/sliders.json';
+import { publicAsset } from './assets';
 
 const enabled = import.meta.env.VITE_STATIC_PREVIEW === 'true';
 const clone = value => JSON.parse(JSON.stringify(value));
-const assetUrl = value => (
-  typeof value === 'string' && value.startsWith('/')
-    ? `${import.meta.env.BASE_URL}${value.slice(1)}`
-    : value
-);
 const withImages = item => {
   const result = { ...item };
   for (const key of ['image', 'imageUrl', 'thumbnail', 'logo', 'logoWhite', 'favicon']) {
-    if (key in result) result[key] = assetUrl(result[key]);
+    if (key in result) result[key] = publicAsset(result[key]);
   }
   return result;
 };
@@ -38,6 +34,8 @@ export function getStaticPreviewData(endpoint, options = {}) {
   else if (path.startsWith('/api/news/')) {
     const id = decodeURIComponent(path.slice('/api/news/'.length));
     value = news.find(item => String(item.id) === id && item.published !== false) || null;
+  } else if (path === '/api/auth/me') {
+    throw Object.assign(new Error('Authentication is unavailable in the static preview'), { status: 401 });
   } else {
     return undefined;
   }
