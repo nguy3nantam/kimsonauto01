@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "name": "Catalogue_VinFast_VF_Series_Toan_Dien_2026.pdf",
+    "description": "Bản catalogue cập nhật chi tiết thông số kỹ thuật, tùy chọn màu sắc và giá lăn bánh các mẫu xe điện VinFast VF 3, VF 5, VF 6, VF 7, VF 8, VF 9.",
+    "category": "Catalog & Bảng Giá",
+    "fileSize": "14.2 MB",
+    "fileType": "PDF",
+    "targetDepartment": "Kinh Doanh",
+    "uploadedBy": "Phòng Marketing",
+    "createdAt": "2026-09-25T11:00:00.000Z",
+    "downloads": 142
+  },
+  {
+    "id": "2",
+    "name": "Quy_Trinh_Kiem_Tra_Bao_Duong_Tieu_Chuan_VinFast.pdf",
+    "description": "Cẩm nang quy trình tiếp nhận, kiểm tra pin, động cơ điện, hệ thống làm mát và quy chuẩn an toàn cao áp xe điện cho kỹ thuật viên.",
+    "category": "Tài Liệu Kỹ Thuật",
+    "fileSize": "8.5 MB",
+    "fileType": "PDF",
+    "targetDepartment": "Dịch Vụ",
+    "uploadedBy": "Ban Quản Lý Kỹ Thuật",
+    "createdAt": "2026-09-24T15:20:00.000Z",
+    "downloads": 208
+  },
+  {
+    "id": "3",
+    "name": "Hop_Dong_Mua_Ban_Xe_Doanh_Nghiep_KimSon_2026.docx",
+    "description": "Mẫu hợp đồng pháp lý chuẩn cho khách hàng mua xe dự án, đội xe taxi, công ty vận tải kèm điều khoản bảo hành pin và trạm sạc.",
+    "category": "Hợp Đồng & Pháp Lý",
+    "fileSize": "1.8 MB",
+    "fileType": "DOCX",
+    "targetDepartment": "Kinh Doanh",
+    "uploadedBy": "Phòng Pháp Chế",
+    "createdAt": "2026-09-23T14:00:00.000Z",
+    "downloads": 95
+  },
+  {
+    "id": "4",
+    "name": "Bang_Ke_Nghiem_Thu_Phu_Tung_Sua_Chua_Bao_Hiem.xlsx",
+    "description": "Biểu mẫu Excel tính toán vật tư, công sơn gò hàn và liên kết hồ sơ bồi thường các hãng bảo hiểm liên kết (Bảo Việt, PTI, PVI, PJICO).",
+    "category": "Biểu Mẫu Hành Chính",
+    "fileSize": "620 KB",
+    "fileType": "XLSX",
+    "targetDepartment": "Kế Toán",
+    "uploadedBy": "Phòng Kế Toán",
+    "createdAt": "2026-09-22T09:30:00.000Z",
+    "downloads": 178
+  },
+  {
+    "id": "5",
+    "name": "Bo_Nhan_Dien_Thuong_Hieu_KimSon_Auto_2026.zip",
+    "description": "File vector Logo Kim Sơn Automobiles (AI, EPS, SVG, PNG trong suốt), bảng chuẩn màu VinFast Blue, font chữ chuẩn và template slide trình chiếu.",
+    "category": "Nhận Diện Thương Hiệu",
+    "fileSize": "48.6 MB",
+    "fileType": "ZIP",
+    "targetDepartment": "Marketing",
+    "uploadedBy": "Phòng Marketing",
+    "createdAt": "2026-09-20T10:15:00.000Z",
+    "downloads": 310
+  },
+  {
+    "id": "6",
+    "name": "So_Tay_Van_Hoa_Doanh_Nghiep_Quy_Che_Phuc_Loi.pdf",
+    "description": "Sổ tay nhân sự quy định giờ làm việc, đồng phục, quy tắc ứng xử khách hàng 5 sao và chính sách thưởng KPI theo năng lực tháng/quý.",
+    "category": "Biểu Mẫu Hành Chính",
+    "fileSize": "5.4 MB",
+    "fileType": "PDF",
+    "targetDepartment": "Nhân Sự",
+    "uploadedBy": "Phòng Nhân Sự",
+    "createdAt": "2026-09-18T16:00:00.000Z",
+    "downloads": 265
+  }
+]

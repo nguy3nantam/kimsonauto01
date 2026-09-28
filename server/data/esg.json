@@ -1,0 +1,20 @@
+[
+  {
+    "id": "env",
+    "title": "Môi Trường & Năng Lượng Xanh",
+    "desc": "Tích cực thúc đẩy phổ cập xe điện không phát thải, ứng dụng phòng sơn sấy lọc khí khép kín và xử lý chất thải dầu nhớt theo quy chuẩn bảo vệ môi trường cao nhất.",
+    "kpi": "100% Xưởng đạt chuẩn sinh thái"
+  },
+  {
+    "id": "social",
+    "title": "Phát Triển Nguồn Nhân Lực Kỹ Thuật Cao",
+    "desc": "Liên tục tổ chức các khóa đào tạo nâng cao tay nghề kỹ sư về công nghệ pin ô tô, an toàn điện cao áp và văn hóa tận tâm phục vụ.",
+    "kpi": "300+ Kỹ sư được đào tạo chuyên sâu"
+  },
+  {
+    "id": "governance",
+    "title": "Trách Nhiệm Cộng Đồng & An Sinh Giao Thông",
+    "desc": "Duy trì mạng lưới xe cứu hộ miễn phí trong các tình huống khẩn cấp bão lũ, tài trợ các hoạt động an toàn giao thông đường bộ tại địa phương.",
+    "kpi": "24/7 Phục vụ cộng đồng 365 ngày"
+  }
+]

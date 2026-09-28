@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "ollama.ollama",
+        "ms-azuretools.vscode-containers"
+    ]
+}

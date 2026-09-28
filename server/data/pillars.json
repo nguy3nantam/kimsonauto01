@@ -1,0 +1,92 @@
+[
+  {
+    "id": "distribution",
+    "title": "Phân Phối & Kinh Doanh Phương Tiện",
+    "subtitle": "Kim Sơn Auto Distribution",
+    "icon": "Car",
+    "category": "Thương Mại & Chuỗi Cung Ứng",
+    "badge": "Trụ Cột Thương Mại",
+    "tagline": "Cung cấp phương tiện di chuyển thông minh, an toàn và bền vững",
+    "summary": "Hệ thống phân phối ủy quyền và đối tác chiến lược của các thương hiệu hàng đầu, tiên phong trong làn sóng xe điện VinFast cùng các dòng xe chất lượng cao được kiểm định khắt khe.",
+    "description": "Kim Sơn Auto Distribution giữ vai trò cầu nối chiến lược giữa nhà sản xuất và người tiêu dùng. Chúng tôi cam kết cung cấp những mẫu xe đáp ứng tiêu chuẩn an toàn cao nhất, chính sách bảo hành chính hãng và các giải pháp tài chính linh hoạt.",
+    "capabilities": [
+      "Hợp tác chiến lược phân phối hệ sinh thái xe điện thông minh VinFast",
+      "Kinh doanh các dòng xe thương mại, bán tải Chevrolet và Nissan",
+      "Kiểm định chất lượng 160 bước chuẩn kỹ thuật cho xe đã qua sử dụng",
+      "Giải pháp sở hữu xe trọn gói cho cá nhân, doanh nghiệp và đối tác vận tải"
+    ],
+    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=85&w=1200"
+  },
+  {
+    "id": "engineering",
+    "title": "Kỹ Thuật & Dịch Vụ Sửa Chữa Chuyên Sâu",
+    "subtitle": "Kim Sơn Service & Engineering",
+    "icon": "Wrench",
+    "category": "Kỹ Thuật Công Nghệ Cao",
+    "badge": "Trụ Cột Nền Tảng",
+    "tagline": "Tiêu chuẩn xưởng dịch vụ kỹ thuật số - Hiện đại & Chuẩn xác",
+    "summary": "Hệ thống xưởng dịch vụ quy mô lớn trang bị thiết bị chẩn đoán điện tử thế hệ mới, dàn kéo nắn thủy lực và phòng sơn sấy hấp hồng ngoại chuẩn châu Âu.",
+    "description": "Khởi nguồn từ xưởng cơ khí kỹ thuật cao từ năm 2014, Kim Sơn Service & Engineering là trái tim công nghệ của toàn hệ sinh thái với đội ngũ kỹ sư lành nghề.",
+    "capabilities": [
+      "Bảo dưỡng định kỳ theo quy chuẩn quốc tế mọi phân khúc xe",
+      "Đại tu động cơ, hộp số tự động và chẩn đoán hệ thống điện xe điện",
+      "Trung tâm đồng sơn công nghệ cao với phòng sấy hấp khép kín",
+      "Cân chỉnh góc đặt bánh xe 3D và kiểm định an toàn điện tử"
+    ],
+    "image": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=85&w=1200"
+  },
+  {
+    "id": "parts",
+    "title": "Phụ Tùng & Chuỗi Cung Ứng Phụ Kiện",
+    "subtitle": "Kim Sơn Genuine Parts & Supply",
+    "icon": "Layers",
+    "category": "Công Nghiệp Phụ Trợ",
+    "badge": "Trụ Cột Phụ Trợ",
+    "tagline": "Phụ tùng chính phẩm 100% - Nguồn gốc minh bạch tuyệt đối",
+    "summary": "Kho logistics phụ tùng trung tâm phân phối linh kiện chính ngạch, phụ kiện công nghệ và thiết bị hỗ trợ lái thông minh.",
+    "description": "Đảm bảo sự vận hành liên tục và ổn định cho hệ sinh thái, Kim Sơn Genuine Parts quản lý kho vật tư hiện đại với hàng chục nghìn mã phụ tùng OEM và chính hãng.",
+    "capabilities": [
+      "Cung cấp phụ tùng thay thế chính hãng cho VinFast, Chevrolet, Nissan",
+      "Kho logistics phụ tùng trung tâm kết nối trực tiếp đến 11 chi nhánh & showroom",
+      "Nâng cấp hệ sinh thái công nghệ: Camera 360, Màn hình thông minh, Cảm biến ADAS",
+      "Cam kết xuất xứ CO/CQ rõ ràng và chính sách bảo hành 1 đổi 1"
+    ],
+    "image": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&q=85&w=1200"
+  },
+  {
+    "id": "detailing",
+    "title": "Chăm Sóc & Làm Đẹp Xe Cao Cấp",
+    "subtitle": "Kim Sơn Car Detailing & Aesthetic",
+    "icon": "Sparkles",
+    "category": "Dịch Vụ Cá Nhân Hóa",
+    "badge": "Trụ Cột Trải Nghiệm",
+    "tagline": "Bảo vệ giá trị thẩm mỹ và nâng tầm sang trọng cho xe hơi",
+    "summary": "Quy trình Car Detailing chuyên nghiệp chuẩn quốc tế, ứng dụng công nghệ phủ Ceramic Pro, dán màng bảo vệ PPF và phim cách nhiệt quang học cao cấp.",
+    "description": "Kim Sơn Detailing đại diện cho sự tinh tế trong việc giữ gìn vẻ đẹp nguyên bản và bảo vệ bề mặt phương tiện trước điều kiện thời tiết nhiệt đới khắc nghiệt.",
+    "capabilities": [
+      "Phủ bảo vệ bề mặt sơn Ceramic 9H siêu bóng kháng tia UV",
+      "Dán phim cách nhiệt quang học 3M Crystalline chính hãng",
+      "Dán màng bảo vệ chống trầy xước PPF (Paint Protection Film)",
+      "Spa nội thất chuyên sâu, dưỡng da ghế cao cấp và khử khuẩn Ozone"
+    ],
+    "image": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=85&w=1200"
+  },
+  {
+    "id": "rescue",
+    "title": "Cứu Hộ Giao Thông & An Toàn Đường Bộ 24/7",
+    "subtitle": "Kim Sơn 24/7 Roadside Assistance",
+    "icon": "ShieldAlert",
+    "category": "Hạ Tầng An Toàn & Hỗ Trợ",
+    "badge": "Trụ Cột An Sinh",
+    "tagline": "Ứng cứu khẩn cấp 24/7 - Đồng hành an tâm trên mọi cung đường",
+    "summary": "Đội xe cứu hộ chuyên dụng sàn trượt hiện đại và mạng lưới hỗ trợ kỹ thuật lưu động trên các tuyến quốc lộ, cao tốc trọng điểm.",
+    "description": "Kim Sơn 24/7 Roadside Assistance là lá chắn an toàn cho mọi tài xế lưu thông tại các trục giao thông huyết mạch giữa TP.HCM và Đồng Nai.",
+    "capabilities": [
+      "Đội xe cứu hộ sàn trượt hiện đại, kéo cẩu an toàn không xước gầm",
+      "Tổng đài ứng cứu khẩn cấp 24/7 phục vụ 365 ngày không nghỉ",
+      "Xử lý kỹ thuật cơ động tại chỗ: Kích bình điện, thay bánh sơ cua, vá lốp",
+      "Liên kết trực tiếp đưa xe về các trạm xưởng dịch vụ gần nhất trong hệ sinh thái"
+    ],
+    "image": "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=85&w=1200"
+  }
+]

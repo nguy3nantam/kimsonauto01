@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "title": "Chỉ thị triển khai chiến dịch dịch vụ bảo dưỡng mùa cao điểm Quý 4/2026",
+    "content": "Kính gửi toàn thể các đơn vị thành viên Kim Sơn (VF Biên Hòa, VF Bửu Long, VF Trảng Dài, VF Long Thành, VF Long Khánh, VF Tân Hiệp, VF Bình Thạnh, VF GF Q2). Ban Điều Hành yêu cầu tất cả các Xưởng Dịch Vụ và Showroom sẵn sàng 100% nhân sự kỹ thuật, phụ tùng thay thế định kỳ và đẩy mạnh dịch vụ cứu hộ 24/7 phục vụ khách hàng sử dụng xe điện VinFast trên toàn khu vực.",
+    "category": "Vận Hành & Dịch Vụ",
+    "priority": "urgent",
+    "targetUnit": "Tất Cả Đơn Vị",
+    "targetDepartment": "Dịch Vụ",
+    "author": "Ban Giám Đốc Kim Sơn",
+    "createdAt": "2026-09-26T08:30:00.000Z",
+    "pinned": true
+  },
+  {
+    "id": "2",
+    "title": "Chính sách ưu đãi và chỉ tiêu kinh doanh dòng xe VinFast VF 7 & VF 9 Quý 4/2026",
+    "content": "Thông báo ban hành bảng giá điều chỉnh mới và chính sách hỗ trợ lệ phí trước bạ, tặng gói phụ kiện chính hãng Kim Sơn cho các hợp đồng ký mới trong tháng. Yêu cầu Bộ Phận Kinh Doanh tại 8 đơn vị cập nhật tài liệu chào giá và tư vấn đồng bộ cho khách hàng doanh nghiệp cũng như cá nhân.",
+    "category": "Kinh Doanh & Bán Hàng",
+    "priority": "high",
+    "targetUnit": "Tất Cả Đơn Vị",
+    "targetDepartment": "Kinh Doanh",
+    "author": "Phòng Kinh Doanh & Marketing",
+    "createdAt": "2026-09-25T14:15:00.000Z",
+    "pinned": true
+  },
+  {
+    "id": "3",
+    "title": "Kế hoạch đào tạo nâng cao chuẩn hóa quy trình tiếp nhận & thanh quyết toán kế toán",
+    "content": "Bộ phận Kế toán tổ chức buổi tập huấn chuyên đề về hóa đơn điện tử mới, kiểm soát chứng từ nghiệm thu phụ tùng xe bảo hiểm và đối soát công nợ đối tác vận tải. Lớp học diễn ra vào sáng thứ Bảy tại Hội trường VF GF Q2 và kết nối trực tuyến cho các chi nhánh Đồng Nai.",
+    "category": "Chính Sách & Quy Định",
+    "priority": "normal",
+    "targetUnit": "Tất Cả Đơn Vị",
+    "targetDepartment": "Kế Toán",
+    "author": "Phòng Kế Toán Tài Chính",
+    "createdAt": "2026-09-24T10:00:00.000Z",
+    "pinned": false
+  },
+  {
+    "id": "4",
+    "title": "Thông báo lịch khám sức khỏe định kỳ và chế độ phúc lợi nhân viên năm 2026",
+    "content": "Phòng Nhân Sự trân trọng thông báo lịch khám sức khỏe định kỳ cho hơn 300 cán bộ kỹ thuật viên và nhân viên văn phòng thuộc toàn hệ sinh thái Kim Sơn Automobiles. Đề nghị các Trưởng đơn vị bố trí lịch trực luân phiên đảm bảo xưởng luôn vận hành liên tục.",
+    "category": "Khen Thưởng & Sự Kiện",
+    "priority": "normal",
+    "targetUnit": "Tất Cả Đơn Vị",
+    "targetDepartment": "Nhân Sự",
+    "author": "Phòng Hành Chính Nhân Sự",
+    "createdAt": "2026-09-22T09:00:00.000Z",
+    "pinned": false
+  },
+  {
+    "id": "5",
+    "title": "Triển khai bộ nhận diện truyền thông Kim Sơn x VinFast giai đoạn mới",
+    "content": "Phòng Marketing đã tải lên bộ kit thiết kế POSM, brochure, backdrop bàn giao xe mới. Tất cả các cơ sở khi in ấn hoặc chạy chương trình truyền thông tại địa phương bắt buộc tuân thủ đúng quy chuẩn nhận diện thương hiệu tại thư mục File Dùng Chung.",
+    "category": "Kinh Doanh & Bán Hàng",
+    "priority": "normal",
+    "targetUnit": "Tất Cả Đơn Vị",
+    "targetDepartment": "Marketing",
+    "author": "Phòng Marketing Kim Sơn",
+    "createdAt": "2026-09-20T16:30:00.000Z",
+    "pinned": false
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "Kiến Tạo Chuỗi Giá Trị Hệ Sinh Thái Ô Tô",
+    "subtitle": "TẬP ĐOÀN HỆ SINH THÁI Ô TÔ KIM SƠN",
+    "description": "Từ năm 2014, Kim Sơn Automobiles không ngừng mở rộng và hoàn thiện mô hình hệ sinh thái khép kín: Phân phối phương tiện, Kỹ thuật dịch vụ công nghệ cao, Chuỗi cung ứng phụ tùng, Chăm sóc xe chuyên nghiệp và Hạ tầng cứu hộ 24/7.",
+    "image": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=85&w=1920",
+    "primaryButtonText": "Khám Phá Nền Tảng Phát Triển",
+    "primaryButtonLink": "/#nen-tang-phat-trien",
+    "secondaryButtonText": "Hành Trình 12 Năm (2014 - 2026)",
+    "secondaryButtonLink": "/about",
+    "order": 1,
+    "active": true,
+    "createdAt": "2026-09-26T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "title": "Đại Lý Ủy Quyền VinFast Hàng Đầu Khu Vực Phía Nam",
+    "subtitle": "TIÊN PHONG CHUYỂN ĐỔI XANH & GIAO THÔNG THÔNG MINH",
+    "description": "Hệ thống 8 showroom và xưởng dịch vụ ủy quyền VinFast đạt chuẩn 3S/1S tại Biên Hòa, Bửu Long, Trảng Dài, Long Thành, Long Khánh, Tân Hiệp, Bình Thạnh và Quận 2 TP.HCM.",
+    "image": "/vinfast-kimson-bienhoa.jpg",
+    "primaryButtonText": "Xem Mạng Lưới Chi Nhánh",
+    "primaryButtonLink": "/mang-luoi",
+    "secondaryButtonText": "Chính Sách Phát Triển Bền Vững",
+    "secondaryButtonLink": "/phat-trien-ben-vung",
+    "order": 2,
+    "active": true,
+    "createdAt": "2026-09-26T00:00:00.000Z"
+  },
+  {
+    "id": "3",
+    "title": "Trung Tâm Kỹ Thuật Ô Tô & Cứu Hộ Giao Thông 24/7",
+    "subtitle": "ĐỒI NGŨ KỸ THUẬT VIÊN CHUYÊN GIA TRÊN 300 NHÂN SỰ",
+    "description": "Trang thiết bị chẩn đoán hiện đại, phòng sơn sấy đạt chuẩn quốc tế, phụ tùng chính hãng 100% cùng đội xe cứu hộ sàn trượt túc trực hỗ trợ khách hàng trên mọi cung đường.",
+    "image": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=85&w=1920",
+    "primaryButtonText": "Liên Hệ Hợp Tác B2B",
+    "primaryButtonLink": "/lien-he",
+    "secondaryButtonText": "Tin Tức & Hoạt Động",
+    "secondaryButtonLink": "/tin-tuc",
+    "order": 3,
+    "active": true,
+    "createdAt": "2026-09-26T00:00:00.000Z"
+  }
+]
