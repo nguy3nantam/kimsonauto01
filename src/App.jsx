@@ -92,7 +92,7 @@ function PublicLayout() {
 
 export default function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <ScrollToTop />
       <Suspense fallback={<div className="p-12 text-center" role="status">Đang tải...</div>}>
       <Routes>

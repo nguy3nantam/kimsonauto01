@@ -1,8 +1,13 @@
 // API client for Kim Sơn Backend
+import { getStaticPreviewData } from './staticPreview';
+
 const BASE_URL = '';
 
 export async function fetchApi(endpoint, options = {}) {
   try {
+    const previewData = getStaticPreviewData(endpoint, options);
+    if (previewData !== undefined) return previewData;
+
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       credentials: 'same-origin',
       headers: {
