@@ -291,39 +291,39 @@ export default function Navbar() {
   );
 
   return (
-    <header 
-      className={`sticky top-0 z-40 h-12 max-h-12 relative flex items-center transition-all duration-500 ease-in-out ${
+    <header
+      className={`sticky top-0 z-40 flex h-[64px] sm:h-[68px] items-center border-b text-slate-800 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-slate-200/80 text-slate-800'
-          : 'bg-gradient-to-r from-white/95 via-amber-50/70 via-yellow-50/45 to-white/95 backdrop-blur-md border-b border-amber-200/50 text-slate-800 animate-header-gradient'
+          ? 'border-slate-200/80 bg-white/95 shadow-[0_10px_30px_-20px_rgba(15,23,42,0.45)] backdrop-blur-xl'
+          : 'border-amber-200/60 bg-white/90 shadow-[0_8px_24px_-22px_rgba(154,103,0,0.55)] backdrop-blur-lg'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full">
-        <div className="flex justify-between items-center h-full">
+      <div className="mx-auto h-full w-full max-w-[1440px] px-4 sm:px-6 lg:px-8">
+        <div className="grid h-full grid-cols-[auto_1fr_auto] items-center gap-4 lg:gap-6">
           {/* Logo Kim Sơn Automobiles */}
           <Link 
             to="/" 
-            className="flex items-center group shrink-0 py-1" 
+            className="group flex shrink-0 items-center rounded-xl py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
             title="Kim Sơn Automobiles"
             aria-label="Trang Chủ Kim Sơn Automobiles"
           >
             <img 
               src={publicAsset('/logo-kimson.png')} 
               alt="Kim Sơn Automobiles" 
-              className="h-8 sm:h-9 w-auto object-contain drop-shadow-xs transition-transform duration-300 group-hover:scale-105"
+              className="h-10 w-auto object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-[1.03] sm:h-11"
             />
           </Link>
 
           {/* Desktop Navigation Links với hiệu ứng hover chuyển màu gradient */}
-          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
+          <nav className="mx-auto hidden items-center gap-0.5 rounded-full border border-slate-200/80 bg-slate-100/70 p-1 shadow-inner shadow-slate-200/40 xl:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-3 py-1 rounded-md text-xs font-semibold transition-all duration-300 ${
+                className={`whitespace-nowrap rounded-full px-3 py-2 text-[12px] font-semibold tracking-[-0.01em] transition-all duration-200 2xl:px-4 ${
                   isActive(link.path)
-                    ? 'text-primary bg-gradient-to-r from-primary/15 via-primary-light/10 to-primary/15 font-bold shadow-xs'
-                    : 'text-slate-700 hover:text-primary hover:bg-gradient-to-r hover:from-primary/10 hover:to-primary-light/10'
+                    ? 'bg-white text-primary-dark shadow-sm ring-1 ring-slate-200/80'
+                    : 'text-slate-600 hover:bg-white/80 hover:text-slate-950'
                 }`}
               >
                 {link.name}
@@ -332,24 +332,28 @@ export default function Navbar() {
           </nav>
 
           {/* Phía bên phải: Tài khoản & Nút mở Offcanvas Menu */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-2.5">
             {/* Dropdown Menu Tài Khoản (Đăng Nhập / Đăng Ký) khi rê chuột (Hover) */}
             <div className="relative group">
               <Link
                 to={isLoggedIn ? "/admin" : "/login"}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-300 shadow-xs ${
+                className={`flex h-10 items-center gap-2 rounded-xl border px-3 text-xs font-bold shadow-sm transition-all duration-200 ${
                   isLoggedIn
-                    ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white border border-emerald-200'
-                    : 'bg-primary-subtle text-primary hover:bg-primary hover:text-white border border-primary/20 hover:border-primary'
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-600 hover:bg-emerald-600 hover:text-white'
+                    : 'border-slate-900 bg-slate-950 text-white hover:border-primary-dark hover:bg-primary-dark'
                 }`}
                 title={isLoggedIn ? (isAdmin ? "Bảng quản trị hệ thống" : "Cổng thông tin & file dùng chung") : "Tài khoản hệ thống"}
                 aria-label={isLoggedIn ? "Cổng thành viên" : "Tài khoản"}
               >
-                <User size={13} className="shrink-0" />
+                <span className={`flex h-6 w-6 items-center justify-center rounded-lg ${
+                  isLoggedIn ? 'bg-emerald-100/80 group-hover:bg-white/15' : 'bg-primary/20 text-primary-light'
+                }`}>
+                  <User size={14} className="shrink-0" />
+                </span>
                 <span className="hidden sm:inline-block">
                   {isLoggedIn ? (isAdmin ? "Quản Trị" : "Cổng Nội Bộ") : "Đăng Nhập"}
                 </span>
-                <ChevronDown size={11} className="transition-transform duration-200 group-hover:rotate-180 opacity-70 shrink-0" />
+                <ChevronDown size={12} className="hidden shrink-0 opacity-70 transition-transform duration-200 group-hover:rotate-180 sm:block" />
               </Link>
 
               {/* Popover Flyout hiển thị Đăng Ký và Đăng Nhập khi rê chuột vào */}
@@ -424,13 +428,13 @@ export default function Navbar() {
             {/* Nút kích hoạt Offcanvas Menu với hiệu ứng chuyển màu khi hover */}
             <button
               onClick={() => setIsOpen(true)}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-slate-700 hover:text-primary rounded-lg hover:bg-gradient-to-r hover:from-slate-100 hover:to-amber-50/80 transition-all duration-300 border border-transparent hover:border-amber-200/60"
+              className="flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-slate-700 shadow-sm transition-all duration-200 hover:border-primary/35 hover:bg-primary-subtle hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               title="Mở menu hệ sinh thái"
               aria-label="Mở menu"
             >
-              <Menu size={18} />
-              <span className="hidden sm:inline-block text-xs font-bold uppercase tracking-wider text-slate-700">
-                Menu
+              <Menu size={19} />
+              <span className="hidden text-xs font-bold sm:inline-block">
+                Danh mục
               </span>
             </button>
           </div>
@@ -438,11 +442,7 @@ export default function Navbar() {
       </div>
 
       {/* Hiệu ứng dải viền chuyển màu đa sắc động liên tục (Animated Gradient Color Shift Bar) */}
-      <div 
-        className={`absolute bottom-0 left-0 right-0 h-[2px] transition-all duration-500 pointer-events-none bg-gradient-to-r from-primary via-cyan-400 via-indigo-500 to-primary animate-border-gradient ${
-          isScrolled ? 'opacity-100 shadow-[0_1px_8px_rgba(0,98,210,0.35)]' : 'opacity-75'
-        }`} 
-      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
 
       {/* Render Offcanvas Drawer qua React Portal trực tiếp vào document.body để không bị chặn bởi backdrop-filter của header */}
       {mounted && createPortal(offcanvasDrawer, document.body)}

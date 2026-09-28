@@ -72,26 +72,3 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Header Color Transition & Shifting Gradient Animations */
-@keyframes headerGradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.animate-header-gradient {
-  background-size: 200% 200%;
-  animation: headerGradientShift 8s ease infinite;
-}
-
-.animate-border-gradient {
-  background-size: 200% 100%;
-  animation: headerGradientShift 4s ease infinite;
-}
-
