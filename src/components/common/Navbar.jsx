@@ -157,8 +157,11 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <Link to="/" onClick={() => setIsOpen(false)}>
               <img 
-                src={publicAsset('/logo-kimson.png')} 
+                src={publicAsset('/logo-kimson.webp')}
                 alt="Kim Sơn Automobiles" 
+                width="1024"
+                height="409"
+                decoding="async"
                 className="h-10 w-auto object-contain hover:scale-105 transition-transform"
               />
             </Link>
@@ -308,8 +311,11 @@ export default function Navbar() {
             aria-label="Trang Chủ Kim Sơn Automobiles"
           >
             <img 
-              src={publicAsset('/logo-kimson.png')} 
+              src={publicAsset('/logo-kimson.webp')}
               alt="Kim Sơn Automobiles" 
+              width="1024"
+              height="409"
+              decoding="async"
               className="h-10 w-auto object-contain drop-shadow-sm transition-transform duration-300 group-hover:scale-[1.03] sm:h-11"
             />
           </Link>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { publicAsset } from '../services/assets';
+import { imageVariant, publicAsset } from '../services/assets';
 import { 
   ChevronRight, 
   ArrowRight, 
@@ -38,7 +38,7 @@ const DEFAULT_SLIDES = [
     title: 'Đại Lý Ủy Quyền VinFast\nHàng Đầu Khu Vực Phía Nam',
     subtitle: 'MẠNG LƯỚI SHOWROOM & XƯỞNG DỊCH VỤ HIỆN ĐẠI',
     description: 'Sở hữu chuỗi 11 chi nhánh và showroom 3S/1S VinFast tại các vị trí chiến lược: Biên Hòa, Long Thành, Long Khánh, Trảng Dài, Bình Thạnh, Quận 2...',
-    image: publicAsset('/vinfast-kimson-bienhoa.jpg'),
+    image: publicAsset('/vinfast-kimson-bienhoa.avif'),
     primaryButtonText: 'Khám Phá Mạng Lưới Chi Nhánh',
     primaryButtonLink: '/mang-luoi',
     secondaryButtonText: 'Đăng Ký Lái Thử & Tư Vấn',
@@ -139,8 +139,11 @@ export default function HomePage() {
             }`}
           >
             <img 
-              src={slide.image} 
+              src={publicAsset(slide.image)}
               alt={slide.title}
+              loading={idx === currentSlideIndex ? 'eager' : 'lazy'}
+              fetchPriority={idx === currentSlideIndex ? 'high' : 'low'}
+              decoding="async"
               className="w-full h-full object-cover object-center"
             />
           </div>
@@ -180,9 +183,12 @@ export default function HomePage() {
             <div className="relative group">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-slate-200">
                 <img 
-                  src={publicAsset('/vinfast-kimson-bienhoa.jpg')} 
+                  src={publicAsset('/vinfast-kimson-bienhoa.avif')}
                   alt="VinFast Kim Sơn Biên Hoà" 
+                  width="1024"
+                  height="766"
                   loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
@@ -279,8 +285,10 @@ export default function HomePage() {
             {activePillar ? <div className="lg:col-span-7 bg-white rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl flex flex-col justify-between">
               <div className="relative aspect-[16/9] overflow-hidden">
                 <img 
-                  src={activePillar.image} 
+                  src={imageVariant(activePillar.image, { width: 960, quality: 76 })}
                   alt={activePillar.title} 
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
@@ -445,7 +453,7 @@ export default function HomePage() {
             {homeNews.slice(0, 3).map((item) => (
               <div key={item.id} className="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/90 hover:shadow-xl transition-all flex flex-col justify-between">
                 <div className="aspect-[16/10] overflow-hidden">
-                  <img src={item.image} alt={item.title} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                  <img src={imageVariant(item.image, { width: 720, quality: 72 })} alt={item.title} loading="lazy" decoding="async" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 flex-grow flex flex-col justify-between">
                   <div>

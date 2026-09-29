@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, ChevronRight, Newspaper } from 'lucide-react';
 import { api } from '../services/api';
+import { imageVariant } from '../services/assets';
 
 function ArticleMeta({ article }) {
   return (
@@ -71,7 +72,7 @@ function NewsList() {
             >
               <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                 {item.image ? (
-                  <img src={item.image} alt="" loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={imageVariant(item.image, { width: 720, quality: 72 })} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
                   <div className="h-full flex items-center justify-center text-slate-300"><Newspaper size={48} aria-hidden="true" /></div>
                 )}
@@ -147,7 +148,7 @@ function NewsArticle({ id }) {
         </div>
       ) : article && (
         <article className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
-          {article.image && <img src={article.image} alt={article.title} className="w-full aspect-[16/9] object-cover" />}
+          {article.image && <img src={imageVariant(article.image, { width: 1400, quality: 80 })} alt={article.title} decoding="async" className="w-full aspect-[16/9] object-cover" />}
           <div className="p-5 sm:p-8 lg:p-10 space-y-6">
             <header className="space-y-4">
               {article.category && <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">{article.category}</span>}

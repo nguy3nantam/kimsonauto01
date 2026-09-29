@@ -35,7 +35,7 @@ export const ecosystemData = {
         'Kiểm định chất lượng 160 bước chuẩn kỹ thuật cho xe đã qua sử dụng',
         'Giải pháp sở hữu xe trọn gói cho cá nhân, doanh nghiệp và đối tác vận tải'
       ],
-      image: '/vinfast-kimson-bienhoa.jpg'
+      image: '/vinfast-kimson-bienhoa.avif'
     },
     {
       id: 'engineering',
@@ -164,7 +164,7 @@ export const ecosystemData = {
       role: 'Showroom & Trung Tâm Dịch Vụ Xe Điện VinFast',
       address: '643 Quốc Lộ 1, KP. 27, P. Long Bình, TP. Biên Hòa, Tỉnh Đồng Nai',
       hotline: '0908 123 456',
-      image: '/vinfast-kimson-bienhoa.jpg',
+      image: '/vinfast-kimson-bienhoa.avif',
       features: ['Showroom Xe VinFast', 'Bảo Dưỡng Định Kỳ', 'Xưởng Kỹ Thuật', 'Trạm Sạc Nhanh']
     },
     {

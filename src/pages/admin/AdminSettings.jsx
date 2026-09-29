@@ -156,8 +156,8 @@ export default function AdminSettings() {
   };
 
   const presets = {
-    logoDefault: '/logo-kimson.png',
-    logoWhite: '/logo-kimson-white.png',
+    logoDefault: '/logo-kimson.webp',
+    logoWhite: '/logo-kimson-white.webp',
     favicon3D: '/favicon.png',
     favicon32: '/favicon-32x32.png',
     faviconApple: '/apple-touch-icon.png'
@@ -270,7 +270,7 @@ export default function AdminSettings() {
                         type="text"
                         value={settings.logo || ''}
                         onChange={(e) => setSettings({ ...settings, logo: e.target.value })}
-                        placeholder="/logo-kimson.png hoặc https://..."
+                        placeholder="/logo-kimson.webp hoặc https://..."
                         className="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-800 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                       />
                       <input 
@@ -354,7 +354,7 @@ export default function AdminSettings() {
                         type="text"
                         value={settings.logoWhite || ''}
                         onChange={(e) => setSettings({ ...settings, logoWhite: e.target.value })}
-                        placeholder="/logo-kimson-white.png hoặc https://..."
+                        placeholder="/logo-kimson-white.webp hoặc https://..."
                         className="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-800 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                       />
                       <input 

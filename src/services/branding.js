@@ -3,8 +3,8 @@ import { api } from './api';
 import { publicAsset } from './assets';
 
 export const DEFAULT_BRANDING = {
-  logo: publicAsset('/logo-kimson.png'),
-  logoWhite: publicAsset('/logo-kimson-white.png'),
+  logo: publicAsset('/logo-kimson.webp'),
+  logoWhite: publicAsset('/logo-kimson-white.webp'),
   favicon: publicAsset('/favicon.png'),
   siteTitle: 'Kim Sơn Automobiles - Cổng Thông Tin Hệ Sinh Thái Ô Tô'
 };
@@ -47,9 +47,9 @@ export function useBranding() {
       .then(data => {
         if (!isMounted || !data) return;
         const updated = {
-          logo: data.logo || DEFAULT_BRANDING.logo,
-          logoWhite: data.logoWhite || DEFAULT_BRANDING.logoWhite,
-          favicon: data.favicon || DEFAULT_BRANDING.favicon,
+          logo: publicAsset(data.logo || DEFAULT_BRANDING.logo),
+          logoWhite: publicAsset(data.logoWhite || DEFAULT_BRANDING.logoWhite),
+          favicon: publicAsset(data.favicon || DEFAULT_BRANDING.favicon),
           siteTitle: data.siteTitle || DEFAULT_BRANDING.siteTitle
         };
         setBranding(updated);

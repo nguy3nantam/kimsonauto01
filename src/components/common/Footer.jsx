@@ -14,8 +14,12 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <Link to="/" className="inline-block hover:opacity-90 transition-opacity">
                 <img 
-                  src={settings.logoWhite || '/logo-kimson-white.png'}
+                  src={settings.logoWhite || '/logo-kimson-white.webp'}
                   alt="Kim Sơn Automobiles" 
+                  width="1024"
+                  height="409"
+                  loading="lazy"
+                  decoding="async"
                   className="h-11 w-auto object-contain"
                 />
               </Link>

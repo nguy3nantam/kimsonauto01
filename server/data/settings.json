@@ -10,7 +10,7 @@
   "totalEngineers": 300,
   "totalCustomers": 50000,
   "satisfactionRate": "99%",
-  "logo": "/logo-kimson.png",
-  "logoWhite": "/logo-kimson-white.png",
+  "logo": "/logo-kimson.webp",
+  "logoWhite": "/logo-kimson-white.webp",
   "favicon": "/favicon.png"
 }

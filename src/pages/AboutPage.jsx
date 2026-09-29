@@ -55,7 +55,7 @@ export default function AboutPage() {
             {/* Image Box */}
             <div className="lg:col-span-7 relative group overflow-hidden min-h-[340px] sm:min-h-[440px] flex items-center bg-black">
               <img 
-                src={publicAsset('/vinfast-kimson-bienhoa.jpg')} 
+                src={publicAsset('/vinfast-kimson-bienhoa.avif')}
                 alt="Showroom VinFast Kim Sơn Biên Hoà" 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />

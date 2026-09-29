@@ -302,7 +302,19 @@ app.get('/sitemap.xml', (_req, res) => {
   res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(url => `<url><loc>${base}${url}</loc></url>`).join('')}</urlset>`);
 });
 const distPath = path.join(here, '..', 'dist');
-app.use(express.static(distPath, { maxAge: '1y', immutable: true, setHeaders: (res, file) => { if (file.endsWith('index.html')) res.setHeader('Cache-Control', 'no-cache'); } }));
+app.use(express.static(distPath, {
+  maxAge: 0,
+  setHeaders: (res, file) => {
+    if (file.endsWith('.avif')) res.setHeader('Content-Type', 'image/avif');
+    if (file.endsWith('index.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    } else if (/[\\/]assets[\\/]/.test(file)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+    }
+  },
+}));
 app.get('*', (req, res, next) => {
   if (path.extname(req.path)) return res.sendStatus(404);
   res.set('Cache-Control', 'no-cache');

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { api } from './api';
 import { ecosystemData } from '../data/ecosystem';
 import { DEFAULT_BRANDING, applyFavicon, getStoredBranding } from './branding';
+import { publicAsset } from './assets';
 
 const PublicContentContext = createContext(null);
 const pendingLoads = new Map();
@@ -40,9 +41,9 @@ export function PublicContentProvider({ children }) {
           loaded[name] = true;
           const value = name === 'settings' ? {
             ...data,
-            logo: data.logo || DEFAULT_BRANDING.logo,
-            logoWhite: data.logoWhite || DEFAULT_BRANDING.logoWhite,
-            favicon: data.favicon || DEFAULT_BRANDING.favicon,
+            logo: publicAsset(data.logo || DEFAULT_BRANDING.logo),
+            logoWhite: publicAsset(data.logoWhite || DEFAULT_BRANDING.logoWhite),
+            favicon: publicAsset(data.favicon || DEFAULT_BRANDING.favicon),
             siteTitle: data.siteTitle || DEFAULT_BRANDING.siteTitle,
           } : data;
           setContent(previous => ({ ...previous, [name]: value }));

@@ -115,7 +115,7 @@ export default function AdminLoginPage({ initialMode = 'login' }) {
         <div className="text-center mb-6">
           <Link to="/" className="inline-block hover:scale-105 transition-transform mb-3">
             <img 
-              src={branding.logo || '/logo-kimson.png'} 
+              src={branding.logo || '/logo-kimson.webp'}
               alt="Kim Sơn Automobiles" 
               className="h-16 sm:h-20 w-auto object-contain mx-auto"
             />
