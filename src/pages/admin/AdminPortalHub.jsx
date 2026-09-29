@@ -26,6 +26,7 @@ import {
   Share2
 } from 'lucide-react';
 import { api } from '../../services/api';
+import { hasPermission } from '../../services/permissions';
 import { UNIT_OPTIONS, DEPARTMENT_OPTIONS } from './AdminLoginPage';
 
 const emptyFile = {
@@ -114,15 +115,18 @@ export default function AdminPortalHub() {
     }
   };
 
-  const userRole = normalize(currentUser?.role);
-  const isAdmin = ['admin', 'super admin', 'quản trị viên', 'quan tri vien'].includes(userRole);
-  const isLeader = ['leader', 'trưởng bộ phận', 'truong bo phan', 'trưởng phòng', 'truong phong', 'quản lý'].includes(userRole);
-  const isUser = !isAdmin && !isLeader;
-  const canCreate = isAdmin || isLeader;
+  const canPublishAll = hasPermission(currentUser, 'portal.publish.all');
+  const canPublishScope = hasPermission(currentUser, 'portal.publish.scope');
+  const canUploadAll = hasPermission(currentUser, 'files.upload.all');
+  const canUploadScope = hasPermission(currentUser, 'files.upload.scope');
+  const canCreateAnnouncement = canPublishAll || canPublishScope;
+  const canCreateFile = canUploadAll || canUploadScope;
+  const announcementScoped = !canPublishAll;
+  const fileScoped = !canUploadAll;
 
-  const canDeleteContent = (item) => {
-    if (isAdmin) return true;
-    if (!isLeader) return false;
+  const canDeleteContent = (item, canManageAll, canManageScope) => {
+    if (canManageAll) return true;
+    if (!canManageScope) return false;
     const inScope = (isAll(item.targetUnit) || normalize(item.targetUnit) === normalize(currentUser?.unit)) &&
       (isAll(item.targetDepartment) || normalize(item.targetDepartment) === normalize(currentUser?.department));
     const fullName = currentUser?.fullName || currentUser?.name;
@@ -143,9 +147,9 @@ export default function AdminPortalHub() {
     try {
       await api.createAnnouncement({
         ...newAnnouncement,
-        targetUnit: isLeader ? (currentUser?.unit || 'VF Biên Hòa') : newAnnouncement.targetUnit,
-        targetDepartment: isLeader ? (currentUser?.department || 'Kinh Doanh') : newAnnouncement.targetDepartment,
-        author: currentUser?.fullName || currentUser?.name || (isLeader ? 'Leader Chi Nhánh' : 'Ban Quản Trị Kim Sơn')
+        targetUnit: announcementScoped ? (currentUser?.unit || 'VF Biên Hòa') : newAnnouncement.targetUnit,
+        targetDepartment: announcementScoped ? (currentUser?.department || 'Kinh Doanh') : newAnnouncement.targetDepartment,
+        author: currentUser?.fullName || currentUser?.name || (announcementScoped ? 'Quản lý đơn vị' : 'Ban Quản Trị Kim Sơn')
       });
       setIsAnnouncementModalOpen(false);
       setNewAnnouncement({
@@ -153,8 +157,8 @@ export default function AdminPortalHub() {
         content: '',
         category: 'Chính Sách & Quy Định',
         priority: 'normal',
-        targetUnit: isLeader ? (currentUser?.unit || 'VF Biên Hòa') : 'Tất Cả Đơn Vị',
-        targetDepartment: isLeader ? (currentUser?.department || 'Kinh Doanh') : 'Tất Cả Bộ Phận',
+        targetUnit: announcementScoped ? (currentUser?.unit || 'VF Biên Hòa') : 'Tất Cả Đơn Vị',
+        targetDepartment: announcementScoped ? (currentUser?.department || 'Kinh Doanh') : 'Tất Cả Bộ Phận',
         pinned: false
       });
       loadData();
@@ -205,8 +209,8 @@ export default function AdminPortalHub() {
         ...newFile,
         name: selectedFile.name,
         data,
-        targetUnit: isLeader ? currentUser?.unit : newFile.targetUnit,
-        targetDepartment: isLeader ? currentUser?.department : newFile.targetDepartment
+        targetUnit: fileScoped ? currentUser?.unit : newFile.targetUnit,
+        targetDepartment: fileScoped ? currentUser?.department : newFile.targetDepartment
       });
       setSharedFiles((previous) => [created, ...previous]);
       setIsFileModalOpen(false);
@@ -411,30 +415,30 @@ export default function AdminPortalHub() {
         </div>
 
         {/* Action Button for Admins & Leaders */}
-        {canCreate && (
+        {(canCreateAnnouncement || canCreateFile) && (
           <div className="flex items-center gap-2">
-            {activeTab === 'announcements' ? (
+            {activeTab === 'announcements' ? canCreateAnnouncement && (
               <button
                 onClick={() => setIsAnnouncementModalOpen(true)}
                 className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white text-xs font-bold rounded-xl shadow-glow transition-all"
               >
                 <Plus size={16} />
-                <span>{isLeader ? 'Đăng Thông Báo Chi Nhánh' : 'Đăng Thông Báo Mới'}</span>
+                <span>{announcementScoped ? 'Đăng Thông Báo Chi Nhánh' : 'Đăng Thông Báo Mới'}</span>
               </button>
-            ) : (
+            ) : canCreateFile && (
               <button
                 onClick={() => setIsFileModalOpen(true)}
                 className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white text-xs font-bold rounded-xl shadow-glow transition-all"
               >
                 <Plus size={16} />
-                <span>{isLeader ? 'Tải Lên Tệp Chi Nhánh' : 'Chia Sẻ File Tài Liệu Mới'}</span>
+                <span>{fileScoped ? 'Tải Lên Tệp Chi Nhánh' : 'Chia Sẻ File Tài Liệu Mới'}</span>
               </button>
             )}
           </div>
         )}
 
         {/* Read-only indicator for regular User */}
-        {isUser && (
+        {!canCreateAnnouncement && !canCreateFile && (
           <div className="flex items-center gap-2 px-3.5 py-2 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-semibold">
             <CheckCircle2 size={16} className="text-emerald-600" />
             <span>Chế độ xem tài liệu & thông báo</span>
@@ -569,7 +573,7 @@ export default function AdminPortalHub() {
                         Đọc Chi Tiết →
                       </button>
 
-                      {canDeleteContent(item) && (
+                      {canDeleteContent(item, canPublishAll, canPublishScope) && (
                         <button
                           onClick={() => handleDeleteAnnouncement(item.id)}
                           className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
@@ -669,7 +673,7 @@ export default function AdminPortalHub() {
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 uppercase">
                           {file.fileType}
                         </span>
-                        {canDeleteContent(file) && (
+                        {canDeleteContent(file, canUploadAll, canUploadScope) && (
                           <button
                             onClick={() => handleDeleteSharedFile(file.id)}
                             className="p-1 text-slate-300 hover:text-red-600 rounded-md transition-colors"
@@ -865,12 +869,12 @@ export default function AdminPortalHub() {
                     Đơn Vị Nhận
                   </label>
                   <select
-                    disabled={isLeader}
-                    value={isLeader ? currentUser?.unit || '' : newAnnouncement.targetUnit}
+                    disabled={announcementScoped}
+                    value={announcementScoped ? currentUser?.unit || '' : newAnnouncement.targetUnit}
                     onChange={(e) => setNewAnnouncement({ ...newAnnouncement, targetUnit: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-primary"
                   >
-                    {isLeader && !UNIT_OPTIONS.includes(currentUser?.unit) && <option value={currentUser?.unit || ''}>{currentUser?.unit || 'Chưa có đơn vị'}</option>}
+                    {announcementScoped && !UNIT_OPTIONS.includes(currentUser?.unit) && <option value={currentUser?.unit || ''}>{currentUser?.unit || 'Chưa có đơn vị'}</option>}
                     <option value="Tất Cả Đơn Vị">Tất Cả 8 Đơn Vị</option>
                     {UNIT_OPTIONS.map((u) => (
                       <option key={u} value={u}>{u}</option>
@@ -883,12 +887,12 @@ export default function AdminPortalHub() {
                     Bộ Phận Nhận
                   </label>
                   <select
-                    disabled={isLeader}
-                    value={isLeader ? currentUser?.department || '' : newAnnouncement.targetDepartment}
+                    disabled={announcementScoped}
+                    value={announcementScoped ? currentUser?.department || '' : newAnnouncement.targetDepartment}
                     onChange={(e) => setNewAnnouncement({ ...newAnnouncement, targetDepartment: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-primary"
                   >
-                    {isLeader && !DEPARTMENT_OPTIONS.includes(currentUser?.department) && <option value={currentUser?.department || ''}>{currentUser?.department || 'Chưa có bộ phận'}</option>}
+                    {announcementScoped && !DEPARTMENT_OPTIONS.includes(currentUser?.department) && <option value={currentUser?.department || ''}>{currentUser?.department || 'Chưa có bộ phận'}</option>}
                     <option value="Tất Cả Bộ Phận">Tất Cả 5 Bộ Phận</option>
                     {DEPARTMENT_OPTIONS.map((d) => (
                       <option key={d} value={d}>{d}</option>
@@ -1034,12 +1038,12 @@ export default function AdminPortalHub() {
                   </label>
                   <select
                     id="shared-file-unit"
-                    disabled={isLeader}
-                    value={isLeader ? currentUser?.unit || '' : newFile.targetUnit}
+                    disabled={fileScoped}
+                    value={fileScoped ? currentUser?.unit || '' : newFile.targetUnit}
                     onChange={(e) => setNewFile({ ...newFile, targetUnit: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-primary"
                   >
-                    {isLeader ? <option value={currentUser?.unit || ''}>{currentUser?.unit || 'Chưa có đơn vị'}</option> : (
+                    {fileScoped ? <option value={currentUser?.unit || ''}>{currentUser?.unit || 'Chưa có đơn vị'}</option> : (
                       <>
                         <option value="all">Tất Cả Đơn Vị</option>
                         {UNIT_OPTIONS.map((unit) => <option key={unit} value={unit}>{unit}</option>)}
@@ -1054,12 +1058,12 @@ export default function AdminPortalHub() {
                   </label>
                   <select
                     id="shared-file-department"
-                    disabled={isLeader}
-                    value={isLeader ? currentUser?.department || '' : newFile.targetDepartment}
+                    disabled={fileScoped}
+                    value={fileScoped ? currentUser?.department || '' : newFile.targetDepartment}
                     onChange={(e) => setNewFile({ ...newFile, targetDepartment: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-primary"
                   >
-                    {isLeader ? <option value={currentUser?.department || ''}>{currentUser?.department || 'Chưa có bộ phận'}</option> : (
+                    {fileScoped ? <option value={currentUser?.department || ''}>{currentUser?.department || 'Chưa có bộ phận'}</option> : (
                       <>
                         <option value="all">Tất Cả Bộ Phận</option>
                         {DEPARTMENT_OPTIONS.map((department) => <option key={department} value={department}>{department}</option>)}
@@ -1068,7 +1072,7 @@ export default function AdminPortalHub() {
                   </select>
                 </div>
               </div>
-              {isLeader && <p className="text-xs text-slate-500">Tài liệu được chia sẻ trong đơn vị và bộ phận của bạn.</p>}
+              {fileScoped && <p className="text-xs text-slate-500">Tài liệu được chia sẻ trong đơn vị và bộ phận của bạn.</p>}
               </fieldset>
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">

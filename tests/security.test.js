@@ -20,6 +20,11 @@ test('passwords, scopes and transactional storage', async t => {
   await t.test('Vietnamese roles and audience labels are recognized', () => {
     assert.equal(security.normalizeRole('Quản trị viên'), 'Admin');
     assert.equal(security.normalizeRole('Trưởng bộ phận'), 'Leader');
+    assert.equal(security.normalizeRole('Biên tập viên'), 'Editor');
+    assert.equal(security.normalizeRole('Chăm sóc khách hàng'), 'Support');
+    assert.equal(security.hasPermission({ role: 'Editor' }, 'content.news'), true);
+    assert.equal(security.hasPermission({ role: 'Editor', permissions: ['contacts.manage'] }, 'content.news'), false);
+    assert.equal(security.hasPermission({ role: 'Admin', permissions: [] }, 'settings.manage'), true);
     const user = { id: 'member', role: 'User', unit: 'A', department: 'Sales' };
     assert.equal(security.inScope({ targetUnit: 'Tất cả đơn vị', targetDepartment: 'Tất cả bộ phận' }, user), true);
     assert.equal(security.inScope({ targetUnit: 'B', targetDepartment: 'Sales' }, user), false);

@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { useBranding } from '../../services/branding';
+import { hasPermission } from '../../services/permissions';
 
 export default function AdminLayout() {
   const branding = useBranding();
@@ -33,7 +34,6 @@ export default function AdminLayout() {
   const userRole = currentUser?.role || ((currentUser?.id === '1' || currentUser?.username === 'admin') ? 'Admin' : 'User');
   const isAdmin = userRole === 'Admin';
   const isLeader = userRole === 'Leader';
-  const isUser = !isAdmin && !isLeader;
 
   useEffect(() => {
     let active = true;
@@ -49,7 +49,18 @@ export default function AdminLayout() {
 
   useEffect(() => {
     if (checkingSession || !currentUser) return;
-    const allowed = currentUser.role === 'Admin' || location.pathname === '/admin' || location.pathname === '/admin/portal' || (currentUser.role === 'Leader' && location.pathname === '/admin/users');
+    const required = {
+      '/admin/portal': ['portal.read'],
+      '/admin/dashboard': ['dashboard.view'],
+      '/admin/sliders': ['content.sliders'],
+      '/admin/users': ['users.read.all', 'users.read.scope', 'users.manage.all', 'users.manage.scope'],
+      '/admin/pillars': ['content.pillars'],
+      '/admin/branches': ['content.branches'],
+      '/admin/news': ['content.news'],
+      '/admin/contacts': ['contacts.manage'],
+      '/admin/settings': ['settings.manage'],
+    }[location.pathname];
+    const allowed = location.pathname === '/admin' || !required || hasPermission(currentUser, ...required);
     if (!allowed) navigate('/admin', { replace: true });
   }, [checkingSession, currentUser, location.pathname, navigate]);
 
@@ -62,32 +73,17 @@ export default function AdminLayout() {
     } catch (error) { alert(error.message); }
   };
 
-  const adminNavItems = [
-    { name: 'Thông Báo & File Dùng Chung', path: '/admin/portal', icon: FolderOpen },
-    { name: 'Tổng Quan Hệ Sinh Thái', path: '/admin/dashboard', icon: LayoutDashboard },
-    { name: 'Slider Trang Chủ', path: '/admin/sliders', icon: ImageIcon },
-    { name: 'Người Đăng Ký & Phân Quyền', path: '/admin/users', icon: Users },
-    { name: 'Nền Tảng Phát Triển', path: '/admin/pillars', icon: Layers },
-    { name: 'Mạng Lưới 11 Chi Nhánh', path: '/admin/branches', icon: MapPin },
-    { name: 'Tin Tức & Thông Cáo', path: '/admin/news', icon: Newspaper },
-    { name: 'Yêu Cầu Hợp Tác B2B', path: '/admin/contacts', icon: Mail },
-    { name: 'Cài Đặt & Thông Tin', path: '/admin/settings', icon: Settings },
-  ];
-
-  const leaderNavItems = [
-    { name: 'Thông Báo & File Dùng Chung', path: '/admin/portal', icon: FolderOpen },
-    { 
-      name: `Quản Lý User (${currentUser?.unit || 'Chi Nhánh'})`, 
-      path: '/admin/users', 
-      icon: Users 
-    },
-  ];
-
-  const userNavItems = [
-    { name: 'Thông Báo & File Dùng Chung', path: '/admin/portal', icon: FolderOpen },
-  ];
-
-  const navItems = isAdmin ? adminNavItems : isLeader ? leaderNavItems : userNavItems;
+  const navItems = [
+    { name: 'Thông Báo & File Dùng Chung', path: '/admin/portal', icon: FolderOpen, permissions: ['portal.read'] },
+    { name: 'Tổng Quan Hệ Sinh Thái', path: '/admin/dashboard', icon: LayoutDashboard, permissions: ['dashboard.view'] },
+    { name: 'Slider Trang Chủ', path: '/admin/sliders', icon: ImageIcon, permissions: ['content.sliders'] },
+    { name: 'Người Dùng & Phân Quyền', path: '/admin/users', icon: Users, permissions: ['users.read.all', 'users.read.scope', 'users.manage.all', 'users.manage.scope'] },
+    { name: 'Nền Tảng Phát Triển', path: '/admin/pillars', icon: Layers, permissions: ['content.pillars'] },
+    { name: 'Mạng Lưới Chi Nhánh', path: '/admin/branches', icon: MapPin, permissions: ['content.branches'] },
+    { name: 'Tin Tức & Thông Cáo', path: '/admin/news', icon: Newspaper, permissions: ['content.news'] },
+    { name: 'Yêu Cầu Hợp Tác B2B', path: '/admin/contacts', icon: Mail, permissions: ['contacts.manage'] },
+    { name: 'Cài Đặt & Thông Tin', path: '/admin/settings', icon: Settings, permissions: ['settings.manage'] },
+  ].filter(item => hasPermission(currentUser, ...item.permissions));
 
   const isActive = (path) => {
     if (path === '/admin/portal' && (location.pathname === '/admin/portal' || location.pathname === '/admin')) return true;
@@ -109,6 +105,8 @@ export default function AdminLayout() {
         </span>
       );
     }
+    if (userRole === 'Editor') return <span className="text-[9px] font-black text-violet-300 uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-500/20 border border-violet-400/40 shrink-0">EDITOR</span>;
+    if (userRole === 'Support') return <span className="text-[9px] font-black text-cyan-300 uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 shrink-0">CSKH</span>;
     return (
       <span className="text-[9px] font-bold text-emerald-300 uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 shrink-0">
         USER
@@ -131,6 +129,8 @@ export default function AdminLayout() {
         </span>
       );
     }
+    if (userRole === 'Editor') return <span className="px-2.5 py-1 rounded-full bg-violet-50 border border-violet-300 text-violet-700 text-xs font-bold">Biên tập viên</span>;
+    if (userRole === 'Support') return <span className="px-2.5 py-1 rounded-full bg-cyan-50 border border-cyan-300 text-cyan-700 text-xs font-bold">Chăm sóc khách hàng</span>;
     return (
       <span className="px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-700 text-xs font-bold">
         User: Xem Thông Báo & File
@@ -178,7 +178,7 @@ export default function AdminLayout() {
           {/* Navigation Items */}
           <nav className="p-4 space-y-1.5">
             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2">
-              {isAdmin ? 'Quản Trị Hệ Sinh Thái' : isLeader ? 'Quản Trị Cấp Chi Nhánh' : 'Cổng Thông Tin Thành Viên'}
+              {isAdmin ? 'Quản Trị Hệ Sinh Thái' : isLeader ? 'Quản Trị Cấp Chi Nhánh' : 'Chức Năng Được Cấp Quyền'}
             </div>
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -242,7 +242,7 @@ export default function AdminLayout() {
                 <img src={branding.logo || '/logo-kimson.webp'} alt="Kim Sơn Automobiles" className="h-7 w-auto object-contain" />
               </Link>
               <h2 className="text-base sm:text-xl font-extrabold text-slate-900 tracking-tight">
-                {isAdmin ? 'Bảng Quản Trị Hệ Sinh Thái Kim Sơn' : isLeader ? `Quản Trị Chi Nhánh: ${currentUser?.unit || ''}` : 'Cổng Thông Tin & File Dùng Chung'}
+                {isAdmin ? 'Bảng Quản Trị Hệ Sinh Thái Kim Sơn' : isLeader ? `Quản Trị Chi Nhánh: ${currentUser?.unit || ''}` : 'Cổng Quản Trị Theo Phân Quyền'}
               </h2>
             </div>
           </div>
@@ -277,7 +277,7 @@ export default function AdminLayout() {
 
         {/* Page Content Body */}
         <main className="p-4 sm:p-8 flex-1 overflow-y-auto">
-          <Outlet />
+          <Outlet context={{ currentUser }} />
         </main>
       </div>
     </div>

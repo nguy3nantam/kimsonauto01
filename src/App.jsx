@@ -1,5 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter, HashRouter, Routes, Route, useLocation, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, useLocation, useOutletContext, Navigate, Outlet } from 'react-router-dom';
 
 // Layout & Common Components
 import Navbar from './components/common/Navbar';
@@ -30,6 +30,7 @@ const AdminSliders = lazy(() => import('./pages/admin/AdminSliders'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
 import { PublicContentProvider, usePublicContent } from './services/publicContent';
+import { hasPermission } from './services/permissions';
 
 const ROUTE_TITLES = {
   '/': 'Kim Sơn Automobiles - Cổng Thông Tin Hệ Sinh Thái Ô Tô',
@@ -92,6 +93,17 @@ function PublicLayout() {
   );
 }
 
+function AdminPermissionGate({ permissions, children }) {
+  const { currentUser } = useOutletContext();
+  if (hasPermission(currentUser, ...permissions)) return children;
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center">
+      <h1 className="text-xl font-bold text-amber-900">Bạn chưa được cấp quyền truy cập</h1>
+      <p className="mt-2 text-sm text-amber-700">Liên hệ quản trị viên để được cấp quyền cho chức năng này.</p>
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <Router basename={staticPreview ? undefined : import.meta.env.BASE_URL}>
@@ -129,16 +141,16 @@ export default function App() {
         <Route path="/register" element={<AdminLoginPage initialMode="register" />} />
         
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminPortalHub />} />
-          <Route path="portal" element={<AdminPortalHub />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="sliders" element={<AdminSliders />} />
-          <Route path="pillars" element={<AdminPillars />} />
-          <Route path="branches" element={<AdminBranches />} />
-          <Route path="news" element={<AdminNews />} />
-          <Route path="contacts" element={<AdminContacts />} />
-          <Route path="users" element={<AdminUsers />} />
-          <Route path="settings" element={<AdminSettings />} />
+          <Route index element={<AdminPermissionGate permissions={['portal.read']}><AdminPortalHub /></AdminPermissionGate>} />
+          <Route path="portal" element={<AdminPermissionGate permissions={['portal.read']}><AdminPortalHub /></AdminPermissionGate>} />
+          <Route path="dashboard" element={<AdminPermissionGate permissions={['dashboard.view']}><AdminDashboard /></AdminPermissionGate>} />
+          <Route path="sliders" element={<AdminPermissionGate permissions={['content.sliders']}><AdminSliders /></AdminPermissionGate>} />
+          <Route path="pillars" element={<AdminPermissionGate permissions={['content.pillars']}><AdminPillars /></AdminPermissionGate>} />
+          <Route path="branches" element={<AdminPermissionGate permissions={['content.branches']}><AdminBranches /></AdminPermissionGate>} />
+          <Route path="news" element={<AdminPermissionGate permissions={['content.news']}><AdminNews /></AdminPermissionGate>} />
+          <Route path="contacts" element={<AdminPermissionGate permissions={['contacts.manage']}><AdminContacts /></AdminPermissionGate>} />
+          <Route path="users" element={<AdminPermissionGate permissions={['users.read.all', 'users.read.scope', 'users.manage.all', 'users.manage.scope']}><AdminUsers /></AdminPermissionGate>} />
+          <Route path="settings" element={<AdminPermissionGate permissions={['settings.manage']}><AdminSettings /></AdminPermissionGate>} />
         </Route>
       </Routes>
       </Suspense>

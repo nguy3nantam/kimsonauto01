@@ -5,12 +5,51 @@ import path from 'node:path';
 import { database, readData, updateData, dataDir } from './db.js';
 
 const derive = promisify(scrypt);
+export const PERMISSIONS = [
+  'portal.read',
+  'portal.publish.scope',
+  'portal.publish.all',
+  'files.upload.scope',
+  'files.upload.all',
+  'dashboard.view',
+  'users.read.scope',
+  'users.read.all',
+  'users.manage.scope',
+  'users.manage.all',
+  'content.sliders',
+  'content.pillars',
+  'content.branches',
+  'content.news',
+  'content.esg',
+  'contacts.manage',
+  'settings.manage',
+  'media.upload',
+];
+export const ROLE_PERMISSIONS = {
+  Admin: ['*'],
+  Leader: ['portal.read', 'portal.publish.scope', 'files.upload.scope', 'users.read.scope', 'users.manage.scope'],
+  Editor: ['portal.read', 'dashboard.view', 'content.sliders', 'content.pillars', 'content.branches', 'content.news', 'content.esg', 'media.upload'],
+  Support: ['portal.read', 'dashboard.view', 'contacts.manage'],
+  User: ['portal.read'],
+};
 export const normalizeRole = role => {
   const value = String(role || '').trim().toLowerCase();
   if (['admin', 'super admin', 'quản trị viên', 'quan tri vien'].includes(value)) return 'Admin';
   if (['leader', 'trưởng bộ phận', 'truong bo phan', 'trưởng phòng', 'truong phong', 'quản lý'].includes(value)) return 'Leader';
+  if (['editor', 'biên tập viên', 'bien tap vien', 'nội dung', 'noi dung'].includes(value)) return 'Editor';
+  if (['support', 'chăm sóc khách hàng', 'cham soc khach hang', 'customer care', 'cskh'].includes(value)) return 'Support';
   return 'User';
 };
+export function effectivePermissions(user) {
+  const role = normalizeRole(user?.role);
+  if (role === 'Admin') return ['*'];
+  const assigned = Array.isArray(user?.permissions) ? user.permissions : ROLE_PERMISSIONS[role];
+  return [...new Set((assigned || []).filter(permission => PERMISSIONS.includes(permission)))];
+}
+export function hasPermission(user, ...permissions) {
+  const assigned = effectivePermissions(user);
+  return assigned.includes('*') || permissions.some(permission => assigned.includes(permission));
+}
 export const norm = value => String(value || '').trim().toLowerCase();
 export function httpError(status, message) { return Object.assign(new Error(message), { status }); }
 export async function hashPassword(password) {
@@ -26,12 +65,14 @@ export async function verifyPassword(password, stored) {
 }
 export function profile(user) {
   const { password: _password, passwordHash: _hash, ...safe } = user;
-  return { ...safe, role: normalizeRole(user.role), fullName: user.fullName || user.name || user.username };
+  return { ...safe, role: normalizeRole(user.role), permissions: effectivePermissions(user), fullName: user.fullName || user.name || user.username };
 }
 export async function initializeUsers() {
   const users = readData('users');
   for (const user of users) {
     user.role = normalizeRole(user.role);
+    if (!Array.isArray(user.permissions)) user.permissions = ROLE_PERMISSIONS[user.role];
+    else user.permissions = effectivePermissions(user);
     user.status ||= 'active';
     if (!user.passwordHash) user.passwordHash = await hashPassword(user.password || randomBytes(32).toString('hex'));
     delete user.password;
@@ -85,11 +126,16 @@ export function requireRole(req, ...roles) {
   if (!roles.includes(user.role)) throw httpError(403, 'B?n kh?ng c? quy?n th?c hi?n thao t?c n?y');
   return user;
 }
+export function requirePermission(req, ...permissions) {
+  const user = requireUser(req);
+  if (!hasPermission(user, ...permissions)) throw httpError(403, 'Bạn không có quyền thực hiện thao tác này');
+  return user;
+}
 const isAll = value => !value || ['all', 'tất cả', 'tất cả đơn vị', 'tất cả bộ phận'].includes(norm(value));
 export function inScope(item, user) {
   return user.role === 'Admin' || ((isAll(item.targetUnit) || norm(item.targetUnit) === norm(user.unit)) && (isAll(item.targetDepartment) || norm(item.targetDepartment) === norm(user.department)));
 }
-export function canManage(item, user) {
-  return user.role === 'Admin' || (user.role === 'Leader' && inScope(item, user) && (item.authorId === user.id || (!item.authorId && (item.author === user.fullName || item.uploadedBy === user.fullName))));
+export function canManage(item, user, allPermission = 'portal.publish.all', scopePermission = 'portal.publish.scope') {
+  return hasPermission(user, allPermission) || (hasPermission(user, scopePermission) && inScope(item, user) && (item.authorId === user.id || (!item.authorId && (item.author === user.fullName || item.uploadedBy === user.fullName))));
 }
 export const route = handler => (req, res, next) => Promise.resolve().then(() => handler(req, res)).catch(next);

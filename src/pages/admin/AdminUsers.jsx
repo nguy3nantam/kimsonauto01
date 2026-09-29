@@ -20,6 +20,7 @@ import {
   Eye
 } from 'lucide-react';
 import { api } from '../../services/api';
+import { hasPermission, PERMISSION_GROUPS, ROLE_OPTIONS, permissionsForRole } from '../../services/permissions';
 
 export const UNIT_OPTIONS = [
   'VF Biên Hòa',
@@ -60,6 +61,7 @@ export default function AdminUsers() {
     email: '',
     phone: '',
     role: 'User',
+    permissions: permissionsForRole('User'),
     status: 'active'
   });
   const [formError, setFormError] = useState('');
@@ -79,16 +81,18 @@ export default function AdminUsers() {
     loadUsers(u);
   }, []);
 
-  const userRole = currentUser?.role || ((currentUser?.id === '1' || currentUser?.username === 'admin') ? 'Admin' : 'User');
-  const isAdmin = userRole === 'Admin';
-  const isLeader = userRole === 'Leader';
+  const canManageAll = hasPermission(currentUser, 'users.manage.all');
+  const canManageScope = hasPermission(currentUser, 'users.manage.scope');
+  const canManageUsers = canManageAll || canManageScope;
+  const canReadAll = hasPermission(currentUser, 'users.read.all', 'users.manage.all');
+  const isScopedManager = !canManageAll;
 
   const loadUsers = async (activeUser = currentUser) => {
     setLoading(true);
     try {
-      const isL = activeUser?.role === 'Leader';
-      const params = isL ? {
-        requesterRole: 'Leader',
+      const scoped = !hasPermission(activeUser, 'users.read.all', 'users.manage.all');
+      const params = scoped ? {
+        requesterRole: activeUser?.role,
         requesterUnit: activeUser?.unit,
         requesterDepartment: activeUser?.department
       } : {};
@@ -107,11 +111,12 @@ export default function AdminUsers() {
       fullName: '',
       username: '',
       password: '',
-      unit: isLeader ? (currentUser?.unit || 'VF Biên Hòa') : 'VF Biên Hòa',
-      department: isLeader ? (currentUser?.department || 'Kinh Doanh') : 'Kinh Doanh',
+      unit: isScopedManager ? (currentUser?.unit || 'VF Biên Hòa') : 'VF Biên Hòa',
+      department: isScopedManager ? (currentUser?.department || 'Kinh Doanh') : 'Kinh Doanh',
       email: '',
       phone: '',
       role: 'User',
+      permissions: permissionsForRole('User'),
       status: 'active'
     });
     setFormError('');
@@ -124,11 +129,12 @@ export default function AdminUsers() {
       fullName: user.fullName || user.name || '',
       username: user.username || '',
       password: '',
-      unit: user.unit || (isLeader ? currentUser?.unit : 'VF Biên Hòa'),
-      department: user.department || (isLeader ? currentUser?.department : 'Kinh Doanh'),
+      unit: user.unit || (isScopedManager ? currentUser?.unit : 'VF Biên Hòa'),
+      department: user.department || (isScopedManager ? currentUser?.department : 'Kinh Doanh'),
       email: user.email || '',
       phone: user.phone || '',
       role: user.role || 'User',
+      permissions: user.permissions || permissionsForRole(user.role || 'User'),
       status: user.status || 'active'
     });
     setFormError('');
@@ -152,13 +158,14 @@ export default function AdminUsers() {
         const updatePayload = {
           fullName: formData.fullName,
           name: formData.fullName,
-          unit: isLeader ? currentUser?.unit : formData.unit,
-          department: isLeader ? currentUser?.department : formData.department,
+          unit: isScopedManager ? currentUser?.unit : formData.unit,
+          department: isScopedManager ? currentUser?.department : formData.department,
           email: formData.email,
           phone: formData.phone,
-          role: isLeader ? 'User' : formData.role,
+          role: isScopedManager ? 'User' : formData.role,
+          permissions: isScopedManager ? permissionsForRole('User') : formData.permissions,
           status: formData.status,
-          requesterRole: isLeader ? 'Leader' : 'Admin',
+          requesterRole: currentUser?.role,
           requesterUnit: currentUser?.unit,
           requesterDepartment: currentUser?.department
         };
@@ -177,10 +184,11 @@ export default function AdminUsers() {
         await api.createUser({
           ...formData,
           name: formData.fullName,
-          unit: isLeader ? currentUser?.unit : formData.unit,
-          department: isLeader ? currentUser?.department : formData.department,
-          role: isLeader ? 'User' : formData.role,
-          requesterRole: isLeader ? 'Leader' : 'Admin',
+          unit: isScopedManager ? currentUser?.unit : formData.unit,
+          department: isScopedManager ? currentUser?.department : formData.department,
+          role: isScopedManager ? 'User' : formData.role,
+          permissions: isScopedManager ? permissionsForRole('User') : formData.permissions,
+          requesterRole: currentUser?.role,
           requesterUnit: currentUser?.unit,
           requesterDepartment: currentUser?.department
         });
@@ -201,15 +209,15 @@ export default function AdminUsers() {
       return;
     }
 
-    if (isLeader && (user.unit !== currentUser?.unit || user.department !== currentUser?.department)) {
+    if (isScopedManager && (user.unit !== currentUser?.unit || user.department !== currentUser?.department)) {
       alert('Bạn chỉ có quyền quản lý nhân viên thuộc chi nhánh và bộ phận của mình!');
       return;
     }
 
     if (window.confirm(`Bạn có chắc chắn muốn xóa thành viên "${user.fullName || user.name}"?`)) {
       try {
-        const deleteParams = isLeader ? {
-          requesterRole: 'Leader',
+        const deleteParams = isScopedManager ? {
+          requesterRole: currentUser?.role,
           requesterUnit: currentUser?.unit,
           requesterDepartment: currentUser?.department
         } : {};
@@ -224,7 +232,7 @@ export default function AdminUsers() {
   // Filter logic
   const filteredUsers = users.filter((u) => {
     // If Leader, only show users belonging to Leader's unit & department
-    if (isLeader) {
+    if (isScopedManager) {
       if (currentUser?.unit && u.unit !== currentUser.unit) return false;
       if (currentUser?.department && u.department !== currentUser.department) return false;
     }
@@ -276,7 +284,7 @@ export default function AdminUsers() {
   return (
     <div className="space-y-6">
       {/* Leader Permission Scope Banner */}
-      {isLeader && (
+      {isScopedManager && (
         <div className="bg-gradient-to-r from-blue-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-5 sm:p-6 shadow-md border border-blue-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-blue-300 shrink-0">
@@ -307,14 +315,14 @@ export default function AdminUsers() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-              {isLeader ? `Quản Lý Nhân Viên: ${currentUser?.unit || ''}` : 'Quản Lý Người Đăng Ký Hệ Thống'}
+              {isScopedManager ? `Quản Lý Nhân Viên: ${currentUser?.unit || ''}` : 'Quản Lý Người Dùng & Phân Quyền'}
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
-              {filteredUsers.length} {isLeader ? 'nhân viên' : 'thành viên'}
+              {filteredUsers.length} {isScopedManager ? 'nhân viên' : 'thành viên'}
             </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            {isLeader 
+            {isScopedManager
               ? `Danh sách nhân sự thuộc ${currentUser?.unit || 'Chi Nhánh'} - ${currentUser?.department || 'Bộ Phận'}`
               : 'Theo dõi và phân quyền danh sách đăng ký theo 8 Đơn Vị và 5 Bộ Phận trực thuộc Kim Sơn'}
           </p>
@@ -330,18 +338,18 @@ export default function AdminUsers() {
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           </button>
 
-          <button
+          {canManageUsers && <button
             onClick={handleOpenCreateModal}
             className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white text-xs font-bold rounded-xl shadow-glow transition-all"
           >
             <Plus size={16} />
-            <span>{isLeader ? 'Thêm Nhân Viên Chi Nhánh' : 'Thêm Thành Viên Mới'}</span>
-          </button>
+            <span>{isScopedManager ? 'Thêm Nhân Viên Chi Nhánh' : 'Thêm Thành Viên Mới'}</span>
+          </button>}
         </div>
       </div>
 
       {/* KPI Distribution Cards (Admin only) */}
-      {isAdmin && (
+      {canReadAll && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
           {DEPARTMENT_OPTIONS.map((dept) => {
             const count = deptCounts[dept] || 0;
@@ -390,7 +398,7 @@ export default function AdminUsers() {
         {/* Filter Controls */}
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
           {/* Admin Filters */}
-          {isAdmin ? (
+          {canReadAll ? (
             <>
               {/* Đơn Vị Filter */}
               <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 w-full sm:w-auto">
@@ -559,6 +567,16 @@ export default function AdminUsers() {
                             <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
                             <span>Leader</span>
                           </span>
+                        ) : user.role === 'Editor' ? (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-violet-50 text-violet-800 border border-violet-300">
+                            <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                            <span>Biên tập viên</span>
+                          </span>
+                        ) : user.role === 'Support' ? (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-cyan-50 text-cyan-800 border border-cyan-300">
+                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                            <span>CSKH</span>
+                          </span>
                         ) : (
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -580,7 +598,7 @@ export default function AdminUsers() {
                       {/* Actions */}
                       <td className="py-3.5 px-5 text-right whitespace-nowrap">
                         <div className="flex items-center justify-end gap-1.5">
-                          {(!isLeader || (user.role !== 'Admin' && !isDefaultAdmin)) && (
+                          {canManageUsers && (!isScopedManager || (user.role !== 'Admin' && !isDefaultAdmin)) && (
                             <button
                               onClick={() => handleOpenEditModal(user)}
                               className="p-1.5 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg transition-colors"
@@ -590,7 +608,7 @@ export default function AdminUsers() {
                             </button>
                           )}
 
-                          {!isDefaultAdmin && user.role !== 'Admin' && (!isLeader || user.role === 'User') && (
+                          {canManageUsers && !isDefaultAdmin && user.role !== 'Admin' && (!isScopedManager || user.role === 'User') && (
                             <button
                               onClick={() => handleDelete(user)}
                               className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -613,11 +631,11 @@ export default function AdminUsers() {
       {/* Modal Add / Edit User */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div role="dialog" aria-modal="true" aria-labelledby="user-permissions-title" className="bg-white rounded-3xl max-w-3xl w-full max-h-[calc(100dvh-2rem)] shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col">
             {/* Modal Header */}
             <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-slate-900">
+                <h3 id="user-permissions-title" className="text-lg font-bold text-slate-900">
                   {editingUser ? 'Chỉnh Sửa Người Đăng Ký' : 'Thêm Người Dùng Mới'}
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -633,7 +651,7 @@ export default function AdminUsers() {
             </div>
 
             {/* Modal Body */}
-            <form onSubmit={handleFormSubmit} className="p-5 sm:p-6 space-y-4">
+            <form onSubmit={handleFormSubmit} className="p-5 sm:p-6 space-y-4 overflow-y-auto">
               {formError && (
                 <div className="flex items-center gap-2 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs">
                   <AlertCircle size={16} className="shrink-0" />
@@ -657,7 +675,7 @@ export default function AdminUsers() {
               </div>
 
               {/* Unit & Department Dropdowns */}
-              {isLeader ? (
+              {isScopedManager ? (
                 <div className="p-3.5 bg-blue-50/80 border border-blue-200 rounded-2xl flex items-center justify-between">
                   <div className="space-y-0.5">
                     <span className="text-[10px] uppercase font-bold text-blue-600 tracking-wider">
@@ -786,7 +804,7 @@ export default function AdminUsers() {
                   <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                     Vai Trò Phân Quyền
                   </label>
-                  {isLeader ? (
+                  {isScopedManager ? (
                     <div>
                       <select
                         disabled
@@ -800,12 +818,15 @@ export default function AdminUsers() {
                   ) : (
                     <select
                       value={formData.role}
-                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                      onChange={(e) => {
+                        const nextRole = e.target.value;
+                        setFormData({ ...formData, role: nextRole, permissions: permissionsForRole(nextRole) });
+                      }}
                       className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-primary cursor-pointer"
                     >
-                      <option value="Admin">Admin (Toàn Quyền Quản Trị)</option>
-                      <option value="Leader">Leader (Quản Lý Chi Nhánh & Bộ Phận)</option>
-                      <option value="User">User (Xem Thông Báo & File Dùng Chung)</option>
+                      {ROLE_OPTIONS.map(roleOption => (
+                        <option key={roleOption.value} value={roleOption.value}>{roleOption.label} — {roleOption.description}</option>
+                      ))}
                     </select>
                   )}
                 </div>
@@ -824,6 +845,46 @@ export default function AdminUsers() {
                   </select>
                 </div>
               </div>
+
+              {canManageAll && (
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+                  <div>
+                    <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">Quyền chi tiết</h4>
+                    <p className="mt-1 text-[11px] text-slate-500">Vai trò cung cấp bộ quyền mặc định. Bạn có thể bật hoặc tắt từng chức năng cho tài khoản này.</p>
+                  </div>
+                  {formData.role === 'Admin' ? (
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800">
+                      Admin luôn có toàn quyền hệ thống và không thể giới hạn từng quyền.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {PERMISSION_GROUPS.map(group => (
+                        <fieldset key={group.label} className="rounded-xl border border-slate-200 bg-white p-3">
+                          <legend className="px-1 text-[11px] font-black uppercase tracking-wider text-slate-700">{group.label}</legend>
+                          <div className="mt-1 space-y-2">
+                            {group.items.map(([permission, label]) => (
+                              <label key={permission} className="flex items-start gap-2 text-xs text-slate-700 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={formData.permissions.includes(permission)}
+                                  onChange={(event) => setFormData(previous => ({
+                                    ...previous,
+                                    permissions: event.target.checked
+                                      ? [...new Set([...previous.permissions, permission])]
+                                      : previous.permissions.filter(item => item !== permission),
+                                  }))}
+                                  className="mt-0.5 rounded border-slate-300 text-primary focus:ring-primary"
+                                />
+                                <span>{label}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </fieldset>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Actions */}
               <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">

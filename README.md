@@ -33,6 +33,18 @@ Playwright tự mở Vite ở cổng 4173 và mock API cho các tình huống CM
 - Session dùng cookie HttpOnly. Đặt `COOKIE_SECURE=true` khi phục vụ qua HTTPS; đặt `PUBLIC_URL` thành địa chỉ website để tạo sitemap.
 - `docker compose up -d --build` triển khai ở `http://localhost:3001`, dùng volumes cho data và uploads. Kiểm tra `docker compose ps` và `/api/health` sau triển khai.
 
+## Phân quyền quản trị
+
+Hệ thống kiểm tra quyền ở cả giao diện và API. Năm mẫu vai trò gồm:
+
+- `Admin`: toàn quyền và quản lý phân quyền.
+- `Leader`: quản lý người dùng, thông báo và file trong đúng đơn vị/bộ phận.
+- `Editor`: quản lý slider, trụ cột, chi nhánh, tin tức, ESG và hình ảnh.
+- `Support`: xem dashboard và xử lý yêu cầu khách hàng.
+- `User`: xem thông báo và file được chia sẻ.
+
+Admin có thể bật hoặc tắt quyền riêng cho từng tài khoản tại **Người Dùng & Phân Quyền**. Quyền theo phạm vi (`scope`) luôn bị giới hạn theo đơn vị và bộ phận của người dùng; quyền toàn hệ thống (`all`) chỉ nên cấp cho người phụ trách phù hợp. Khi mật khẩu, trạng thái, vai trò hoặc quyền thay đổi, các phiên đăng nhập của tài khoản đó bị thu hồi.
+
 ## CI/CD và VPS
 
 GitHub Actions build và lưu image tại `ghcr.io/nguy3nantam/kimsonauto01`. Quy trình cấu hình SSH, GitHub Secrets và triển khai production nằm trong [docs/VPS_DEPLOYMENT.md](docs/VPS_DEPLOYMENT.md).

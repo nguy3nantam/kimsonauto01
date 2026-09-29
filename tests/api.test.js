@@ -70,9 +70,11 @@ test('API regression checks with isolated data and uploads', { timeout: 30000 },
     assert.equal(user.role, 'Admin'); assert.equal(user.passwordHash, undefined); assert.equal(user.password, undefined);
   });
   await t.test('public registration cannot grant administrator privileges', async () => {
-    const response = await request('/api/auth/register', { method: 'POST', body: { username: 'member', fullName: 'Member', password: 'test-member-password', unit: 'A', department: 'Sales', role: 'Admin' } });
+    const response = await request('/api/auth/register', { method: 'POST', body: { username: 'member', fullName: 'Member', password: 'test-member-password', unit: 'A', department: 'Sales', role: 'Admin', permissions: ['users.manage.all'] } });
     assert.equal(response.status, 201);
-    assert.equal((await response.json()).user.role, 'User');
+    const registered = (await response.json()).user;
+    assert.equal(registered.role, 'User');
+    assert.deepEqual(registered.permissions, ['portal.read']);
     const cookie = response.headers.get('set-cookie').split(';')[0];
     assert.equal((await request('/api/users?requesterRole=Admin', { cookie })).status, 403);
     assert.equal((await request('/api/news', { cookie, method: 'POST', body: {} })).status, 403);
@@ -85,6 +87,30 @@ test('API regression checks with isolated data and uploads', { timeout: 30000 },
     assert.equal((await request(`/api/news/${id}`)).status, 404);
     assert.equal((await (await request('/api/news?all=true', { cookie: admin })).json()).some(item => item.id === id), true);
     assert.equal((await request('/api/upload', { cookie: admin, method: 'POST', body: { name: 'test.html', data: Buffer.from('<html>test</html>').toString('base64') } })).status, 400);
+  });
+  await t.test('module permissions allow assigned work and reject privilege escalation', async () => {
+    const createAndLogin = async ({ username, role, permissions }) => {
+      const created = await request('/api/users', { cookie: admin, method: 'POST', body: {
+        username, password: 'test-role-password-123', fullName: username, unit: 'VF Biên Hòa', department: 'Marketing', role, permissions, status: 'active',
+      } });
+      assert.equal(created.status, 201);
+      const login = await request('/api/auth/login', { method: 'POST', body: { username, password: 'test-role-password-123' } });
+      assert.equal(login.status, 200);
+      return { cookie: login.headers.get('set-cookie').split(';')[0], user: (await login.json()).user };
+    };
+
+    const editor = await createAndLogin({ username: 'editor', role: 'Editor', permissions: ['content.news', 'media.upload'] });
+    assert.deepEqual(editor.user.permissions, ['content.news', 'media.upload']);
+    assert.equal((await request('/api/news', { cookie: editor.cookie, method: 'POST', body: { title: 'Editor article', category: 'Test', summary: 'Summary', content: 'Content', image: '', status: 'draft' } })).status, 201);
+    assert.equal((await request('/api/contacts', { cookie: editor.cookie })).status, 403);
+    assert.equal((await request('/api/users', { cookie: editor.cookie })).status, 403);
+    assert.equal((await request('/api/settings', { cookie: editor.cookie, method: 'PUT', body: { slogan: 'Denied' } })).status, 403);
+
+    const support = await createAndLogin({ username: 'support', role: 'Support' });
+    assert.equal(support.user.permissions.includes('contacts.manage'), true);
+    assert.equal((await request('/api/contacts', { cookie: support.cookie })).status, 200);
+    assert.equal((await request('/api/stats', { cookie: support.cookie })).status, 200);
+    assert.equal((await request('/api/news', { cookie: support.cookie, method: 'POST', body: {} })).status, 403);
   });
   await t.test('storage failures return 500 and concurrent writes persist', async () => {
     const db = new DatabaseSync(path.join(temp, 'data', 'kimsonauto.sqlite'));
